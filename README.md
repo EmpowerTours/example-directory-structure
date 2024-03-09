@@ -1,7 +1,7 @@
 # EmpowerTour Thailand
 
 ## Overview
-![image](Screenshot_9-3-2024_17401_looka.com.jpeg)
+[center]![image](Screenshot_9-3-2024_17401_looka.com.jpeg)[br]
 EmpowerTour Thailand is a visionary startup aiming to revolutionize the tourism industry by integrating technology, cultural enrichment, and community empowerment. This repository contains essential documents and materials related to the business plan, marketing strategy, technological solutions, and more.
 
 ## Business Plan
