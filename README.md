@@ -1,6 +1,3 @@
-# example-directory-structure
-Bones aka structure
-
 # EmpowerTour Thailand
 
 ## Overview
