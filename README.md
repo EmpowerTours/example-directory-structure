@@ -40,3 +40,11 @@ This is a title that can be manipulated.
 ## ![plot](./subTitle.svg)
 
 This is a sub-title with cyan color but can be manipulated
+
+# My GitHub README
+
+Welcome to my README!
+
+<div align="center">
+    <img src="example.svg" width="400" height="400" alt="css-in-readme">
+</div>
