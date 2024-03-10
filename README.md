@@ -9,20 +9,25 @@ EmpowerTour Thailand is a visionary startup aiming to revolutionize the tourism 
 - [a - 1 page Executive Summary](Executive_summary.md)
 - [b - The Company / Background](companybackground.md)
 - [c - Mission & Vision](missionvision.md)
-- [Business Model](Business_Plan/Business_Model.md)
-- [Funding Sources](Business_Plan/Funding_Sources.md)
-- [Growth Objectives and Implementation Plan](Business_Plan/Growth_Objectives_and_Implementation_Plan.md)
+- [d - Management Team](managementteam.md)
+- [e - Products](products.md)
+- [f - Technology and Innovation Applied](taia.md)
+- [g - Industry Description/ Competition/ Trends](tct.md)
+- [h - Marketing & Sales Strategy](mss.md)
+- [i -  Financial Plan/ Exit Strategy/ Funds Required](fef.md)
+- [j- Revenue model](rm.md)
+- [k - Growth Strategy](gs.md)
+- [l - Thailand’s Benefit](tb.md)
 
 ## Marketing Materials
 
-- [Pitch Deck (PDF)](Marketing_Materials/Pitch_Deck.pdf)
 - [Branding Strategy](Marketing_Materials/Branding_Strategy.md)
 - [Target Market Analysis](Marketing_Materials/Target_Market_Analysis.md)
 - [Benefits to Thailand](Marketing_Materials/Benefits_to_Thailand.md)
 
 ## Code
 
-- [Source Code for Technological Solutions](Code/Source_Code_for_Technological_Solutions)
+- [Source Code for App](Code/Source_Code_for_Technological_Solutions)
 - [Data Analytics and Insights](Code/Data_Analytics_and_Insights)
 
 ## Documents
