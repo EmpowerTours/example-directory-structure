@@ -35,4 +35,4 @@ Earvin Narciso Gallardo Bravo
 Email: [empowertours@gmail.com](mailto:empowertours@gmail.com)  
 Phone: Through E-mail
 
-**Embark on a Journey Beyond Tourism with EmpowerTour Thailand!**
+**Embark on a Journey Beyond Tourism with EmpowerTours Thailand!**
