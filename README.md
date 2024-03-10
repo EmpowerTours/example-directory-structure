@@ -21,4 +21,4 @@ EmpowerTour Thailand is a visionary startup aiming to revolutionize the tourism 
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [GPLv3 License](LICENSE).
