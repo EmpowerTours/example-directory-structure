@@ -4,10 +4,10 @@
 ![image](Screenshot_9-3-2024_17401_looka.com.jpeg) \
 EmpowerTour Thailand is a visionary startup aiming to revolutionize the tourism industry by integrating technology, cultural enrichment, and community empowerment. This repository contains essential documents and materials related to the business plan, marketing strategy, technological solutions, and more.
 
-## Business Plan
+## Pitch Deck
 
-- [Executive Summary](Executive_summary.md)
-- [Mission and Vision](Business_Plan/Mission_and_Vision.md)
+- [a - 1 page Executive Summary](Executive_summary.md)
+- [b - The Company / Background](companybackground.md)
 - [Business Description](Business_Plan/Business_Description.md)
 - [Business Model](Business_Plan/Business_Model.md)
 - [Funding Sources](Business_Plan/Funding_Sources.md)
