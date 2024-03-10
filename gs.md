@@ -44,4 +44,4 @@ EmpowerTours Thailand envisions a strategic and sustainable growth trajectory, d
      - Gather and analyze customer feedback to continually enhance services based on preferences and suggestions.
      - Build a community of empowered travelers, encouraging them to share their experiences and become brand advocates.
 
-EmpowerTourz Thailand's growth strategy revolves around a holistic and sustainable approach, ensuring that expansion aligns with the startup's values of responsible tourism, cultural enrichment, and technological innovation. By continuously adapting to market trends, fostering partnerships, and prioritizing community engagement, the startup aims to create a positive and enduring impact while achieving long-term success.
+EmpowerTours Thailand's growth strategy revolves around a holistic and sustainable approach, ensuring that expansion aligns with the startup's values of responsible tourism, cultural enrichment, and technological innovation. By continuously adapting to market trends, fostering partnerships, and prioritizing community engagement, the startup aims to create a positive and enduring impact while achieving long-term success.
