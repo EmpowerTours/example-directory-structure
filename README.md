@@ -8,7 +8,7 @@ EmpowerTour Thailand is a visionary startup aiming to revolutionize the tourism 
 
 - [a - 1 page Executive Summary](Executive_summary.md)
 - [b - The Company / Background](companybackground.md)
-- [Business Description](Business_Plan/Business_Description.md)
+- [c - Mission & Vision](missionvision.md)
 - [Business Model](Business_Plan/Business_Model.md)
 - [Funding Sources](Business_Plan/Funding_Sources.md)
 - [Growth Objectives and Implementation Plan](Business_Plan/Growth_Objectives_and_Implementation_Plan.md)
