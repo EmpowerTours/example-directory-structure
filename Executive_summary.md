@@ -32,7 +32,7 @@ EmpowerTour Thailand is actively seeking visionary investors who share our commi
 ## Contact
 For inquiries and collaboration opportunities, please contact:  
 Earvin Narciso Gallardo Bravo  
-Email: [earvin@example.com](mailto:earvin@example.com)  
-Phone: [+123-456-7890](tel:+1234567890)
+Email: [empowertours@gmail.com](mailto:empowertours@gmail.com)  
+Phone: Through E-mail
 
 **Embark on a Journey Beyond Tourism with EmpowerTour Thailand!**
