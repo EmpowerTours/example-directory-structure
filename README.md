@@ -21,7 +21,7 @@ EmpowerTour Thailand is a visionary startup aiming to revolutionize the tourism 
 
 ## BootCamp Bank Initial Payment
 
-- [EmpowerTours BootCamp Bank Edition.](https://3009b0f5-33a7-4497-9b7b-14549b9eed77.mysimplestore.com/checkout)
+- [EmpowerTours BootCamp Bank Edition.](https://earvingallardo.com/shop/ols/products/empower-tours-bootcamp-bank-edition))
 
 ## License
 
