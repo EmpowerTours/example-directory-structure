@@ -1,4 +1,23 @@
 from flask import Flask, render_template, request, jsonify
+from web3 import Web3
+
+app = Flask(__name__)
+
+# Connect to a blockchain node (e.g., Infura)
+w3 = Web3(Web3.HTTPProvider('https://mainnet.infura.io/v3/YOUR_INFURA_KEY'))
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/balance/
+')
+def get_balance(address):
+    balance = w3.eth.get_balance(address)
+    return {'balance': w3.from_wei(balance, 'ether')}
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
 app = Flask(__name__)
 
