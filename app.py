@@ -10,7 +10,8 @@ w3 = Web3(Web3.HTTPProvider('https://mainnet.infura.io/v3/YOUR_INFURA_KEY'))
 def index():
     return render_template('index.html')
 
-@app.route('/balance/
+@app.route('/balance/')
+
 ')
 def get_balance(address):
     balance = w3.eth.get_balance(address)
