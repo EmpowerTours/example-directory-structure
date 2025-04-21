@@ -37,7 +37,7 @@ await switchToMonad();
 const web3 = new Web3(window.ethereum);
 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
 console.log('Connected:', accounts[0]);
-document.getElementById('wallet-status').textContent = `Connected: ${accounts[0].slice(0, 6)}...`;
+document.getElementById('wallet-status').textContent = `Connected: ${address.slice(0, 6)}...${address.slice(-4)}`;
 return accounts[0];
 } catch (error) {
 console.error('Connection failed:', error);
