@@ -5,8 +5,8 @@ import os
 app = Flask(__name__, template_folder='templates', static_folder='static')
 
 # Connect to Monad testnet
-MONAD_RPC_URL = os.getenv('MONAD_RPC_URL', 'https://testnet-rpc.monad.xyz')
-w3 = Web3(Web3.HTTPProvider(MONAD_RPC_URL))
+MONAD_RPC_URL = os.getenv('https://testnet-rpc.monad.xyz', 'https://testnet-rpc.monad.xyz')
+w3 = Web3(Web3.HTTPProvider('https://testnet-rpc.monad.xyz'))
 
 # Home Route
 @app.route('/')
