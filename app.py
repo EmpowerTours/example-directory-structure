@@ -1,48 +1,45 @@
 from flask import Flask, render_template, request, jsonify
 from web3 import Web3
+import os
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates', static_folder='static')
 
-# Connect to a blockchain node (e.g., Infura)
-w3 = Web3(Web3.HTTPProvider('https://mainnet.infura.io/v3/YOUR_INFURA_KEY'))
+# Connect to Monad testnet
+MONAD_RPC_URL = os.getenv('MONAD_RPC_URL', 'https://testnet-rpc.monad.xyz')
+w3 = Web3(Web3.HTTPProvider(MONAD_RPC_URL))
 
+# Home Route
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/balance/')
-
-')
+# Balance Route
+@app.route('/balance/<address>')
 def get_balance(address):
-    balance = w3.eth.get_balance(address)
-    return {'balance': w3.from_wei(balance, 'ether')}
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
-app = Flask(__name__)
-
-# Home Route
-@app.route("/")
-def home():
-    return render_template("index.html")
+    try:
+        balance = w3.eth.get_balance(address)
+        return jsonify({'balance': w3.from_wei(balance, 'ether')})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
 
 # Booking Route
-@app.route("/booking")
+@app.route('/booking')
 def booking():
-    return render_template("booking.html")
+    return render_template('booking.html')
 
 # Marketplace Route
-@app.route("/marketplace")
+@app.route('/marketplace')
 def marketplace():
-    return render_template("marketplace.html")
+    return render_template('marketplace.html')
 
 # Handle user sign-up (HTMX)
-@app.route("/signup", methods=["POST"])
+@app.route('/signup', methods=['POST'])
 def signup():
-    username = request.form.get("username")
-    password = request.form.get("password")
-    return jsonify({"message": f"Welcome, {username}!"})
+    username = request.form.get('username')
+    password = request.form.get('password')
+    if not username or not password:
+        return jsonify({'error': 'Username and password required'}), 400
+    return jsonify({'message': f'Welcome, {username}!'})
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(debug=True)
