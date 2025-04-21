@@ -1,34 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-     <title>EmpowerTours</title>
-     <script src="/static/js/web3.js"
-         type="module"></script>
-</head>
-    <body>
-        <button id="connect-wallet">Connect Wallet</button>
-    
-    </body>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EmpowerTours</title>
+    <!-- Load HTMX for dynamic content -->
     <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+    <!-- Load web3.js as a module for wallet connection -->
+    <script src="/static/js/web3.js" type="module" defer></script>
 </head>
 <body>
     <h1>Welcome to EmpowerTours</h1>
 
+    <!-- Connect Wallet Button and Status Display -->
+    <button id="connect-wallet">Connect Wallet</button>
+    <div id="wallet-status">Not connected</div>
+
+    <!-- Sign Up Form -->
+    <h2>Sign Up</h2>
     <form id="signup-form" hx-post="/signup" hx-target="#response">
         <input type="text" name="username" placeholder="Enter username" required>
         <input type="password" name="password" placeholder="Create password" required>
         <button type="submit">Sign Up</button>
     </form>
-
     <div id="response"></div>
 
+    <!-- Booking Section -->
     <h2>Book a Climbing Slot</h2>
     <button hx-get="/booking" hx-target="#booking-content">View Booking</button>
     <div id="booking-content"></div>
 
+    <!-- Marketplace Section -->
     <h2>Visit Marketplace</h2>
     <button hx-get="/marketplace" hx-target="#marketplace-content">Go to Marketplace</button>
     <div id="marketplace-content"></div>
