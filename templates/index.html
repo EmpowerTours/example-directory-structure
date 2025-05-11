@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EmpowerTours - Approve $TOURS</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.3.0/web3.min.js" integrity="sha512-3KqHLZOzP4Vq8c1JqQ6jVRpfO8s3O7hL+HLrO4sYJDiN5OlsJDAHUgqF67xLqQ3zD63v/OkYQX4PQH8T8IioS3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/web3.min.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
         button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
         #status { margin-top: 20px; color: red; }
         a { color: blue; text-decoration: underline; }
+        #txHash { word-break: break-all; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -18,17 +19,18 @@
     <p>Connect your MetaMask wallet to approve the escrow contract for 1 $TOURS.</p>
     <button id="approveButton" onclick="approveTours()" disabled>Approve $TOURS</button>
     <p id="fallback" style="display: none;">
-        If the button is disabled, open this page in an external browser with MetaMask installed: 
+        Please open this page in an external browser with MetaMask installed: 
         <a id="currentUrl"></a>
     </p>
     <div id="status"></div>
+    <div id="txHash"></div>
 
     <script>
         const TOURS_CONTRACT_ADDRESS = "0x2Da15A8B55BE310A7AB8EB0010506AB30CD6CBcf";
         const ESCROW_CONTRACT_ADDRESS = "0x1BC922D67Cbc0dAf9C06442a80cE32009Ff02DCF";
         const TOURS_ABI = [
             {
-                "constant": False,
+                "constant": false,
                 "inputs": [
                     {"name": "_spender", "type": "address"},
                     {"name": "_value", "type": "uint256"}
@@ -38,7 +40,7 @@
                 "type": "function"
             },
             {
-                "constant": True,
+                "constant": true,
                 "inputs": [
                     {"name": "_owner", "type": "address"},
                     {"name": "_spender", "type": "address"}
@@ -54,6 +56,11 @@
             window.Telegram.WebApp.ready();
             window.Telegram.WebApp.expand();
             console.log("Telegram Web App initialized");
+            // Prompt to open external browser
+            window.Telegram.WebApp.showAlert(
+                "MetaMask is not supported in Telegram's in-app browser. Please open this page in an external browser with MetaMask installed.",
+                () => window.Telegram.WebApp.openLink(window.location.href)
+            );
         }
 
         // Initialize page
@@ -71,29 +78,17 @@
 
             // Check Web3.js
             if (typeof Web3 === "undefined") {
-                status.textContent = "Error: Web3.js failed to load. Please open in an external browser with MetaMask installed.";
-                console.error("Web3.js is not defined. Check CDN or network issues.");
+                status.textContent = "Error: Web3.js failed to load. Please refresh the page or open in an external browser with MetaMask installed.";
+                console.error("Web3.js is not defined. Check local file or network issues.");
                 fallback.style.display = "block";
-                if (window.Telegram?.WebApp) {
-                    window.Telegram.WebApp.showAlert(
-                        "Web3.js failed to load. Please open in an external browser.",
-                        () => window.Telegram.WebApp.openLink(window.location.href)
-                    );
-                }
                 return;
             }
 
             // Check MetaMask
             if (!window.ethereum) {
                 status.textContent = "MetaMask not detected. Please open this page in an external browser with MetaMask installed.";
-                console.error("MetaMask not detected. Likely Telegram in-app browser issue.");
+                console.error("MetaMask not detected.");
                 fallback.style.display = "block";
-                if (window.Telegram?.WebApp) {
-                    window.Telegram.WebApp.showAlert(
-                        "MetaMask is not available in Telegram. Please open in an external browser with MetaMask installed.",
-                        () => window.Telegram.WebApp.openLink(window.location.href)
-                    );
-                }
                 return;
             }
 
@@ -108,8 +103,7 @@
 
         async function approveTours() {
             const status = document.getElementById("status");
-            const approveButton = document.getElementById("approveButton");
-            approveButton.disabled = true; // Disable button during transaction
+            const txHashDiv = document.getElementById("txHash");
             status.textContent = "Connecting to MetaMask...";
             console.log("Attempting to connect to MetaMask...");
 
@@ -134,7 +128,7 @@
                                 chainName: "Monad Testnet",
                                 rpcUrls: ["https://testnet-rpc.monad.xyz"],
                                 nativeCurrency: { name: "MON", symbol: "MON", decimals: 18 },
-                                blockExplorerUrls: []
+                                blockExplorerUrls: ["https://testnet.monadscan.com"]
                             }]
                         });
                     } else {
@@ -148,7 +142,6 @@
 
                 // Check current allowance
                 status.textContent = "Checking current allowance...";
-                console.log("Checking allowance...");
                 const allowance = await toursContract.methods.allowance(userAddress, ESCROW_CONTRACT_ADDRESS).call();
                 console.log("Current allowance:", allowance / 10**18, "$TOURS");
 
@@ -161,29 +154,43 @@
                     return;
                 }
 
+                // Check balance
+                status.textContent = "Checking $TOURS balance...";
+                const balance = await toursContract.methods.balanceOf(userAddress).call();
+                console.log("Current balance:", balance / 10**18, "$TOURS");
+                if (parseInt(balance) < 1000000000000000000) {
+                    status.textContent = "Insufficient $TOURS balance. Please fund your wallet with at least 1 $TOURS.";
+                    console.error("Insufficient $TOURS balance:", balance / 10**18);
+                    return;
+                }
+
                 // Approve 1 $TOURS
                 status.textContent = "Please sign the transaction in MetaMask...";
                 console.log("Initiating approve transaction...");
                 const tx = await toursContract.methods.approve(ESCROW_CONTRACT_ADDRESS, "1000000000000000000").send({ from: userAddress });
-                status.textContent = `Approval successful! Transaction hash: ${tx.transactionHash}. Return to Telegram and click 'Accept' again.`;
+                status.textContent = "Approval successful! Return to Telegram and click 'Accept' to start the game.";
+                txHashDiv.textContent = `Transaction hash: ${tx.transactionHash}`;
                 console.log("Approval transaction successful:", tx.transactionHash);
                 if (window.Telegram?.WebApp) {
-                    window.Telegram.WebApp.close();
+                    window.Telegram.WebApp.showAlert(
+                        "Approval successful! Please return to Telegram and click 'Accept' again to start the game.",
+                        () => window.Telegram.WebApp.close()
+                    );
                 }
             } catch (error) {
-                status.textContent = `Error: ${error.message}. Please try again or manually approve in Remix (see Telegram instructions).`;
+                status.textContent = `Error: ${error.message}. Please try again in an external browser with MetaMask or manually approve in Remix.`;
                 console.error("Approval error:", error);
                 document.getElementById("fallback").style.display = "block";
-                approveButton.disabled = false; // Re-enable button for retry
                 if (window.Telegram?.WebApp) {
                     window.Telegram.WebApp.showAlert(
-                        `Approval failed: ${error.message}. Please try again or follow manual approval instructions in Telegram.`,
+                        `Approval failed: ${error.message}. Please open in an external browser or use Remix.`,
                         () => window.Telegram.WebApp.openLink(window.location.href)
                     );
                 }
             }
         }
     </script>
+
 
     <!-- Sign Up Form -->
     <h2>Sign Up</h2>
