@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EmpowerTours</title>
-    <!-- Load HTMX for dynamic content -->
+    <title>EmpowerTours - Approve $TOURS</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.3.0/web3.min.js" integrity="sha512-3KqHLZOzP4Vq8c1JqQ6jVRpfO8s3O7hL+HLrO4sYJDiN5OlsJDAHUgqF67xLqQ3zD63v/OkYQX4PQH8T8IioS3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
         button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
@@ -50,6 +49,13 @@
             }
         ];
 
+        // Telegram Web App integration
+        if (window.Telegram?.WebApp) {
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
+            console.log("Telegram Web App initialized");
+        }
+
         // Initialize page
         function initialize() {
             const status = document.getElementById("status");
@@ -65,7 +71,7 @@
 
             // Check Web3.js
             if (typeof Web3 === "undefined") {
-                status.textContent = "Error: Web3.js failed to load. Please refresh the page or open in an external browser.";
+                status.textContent = "Error: Web3.js failed to load. Please open in an external browser with MetaMask installed.";
                 console.error("Web3.js is not defined. Check CDN or network issues.");
                 fallback.style.display = "block";
                 return;
@@ -73,9 +79,16 @@
 
             // Check MetaMask
             if (!window.ethereum) {
-                status.textContent = "MetaMask not detected. Please install MetaMask and open this page in an external browser.";
+                status.textContent = "MetaMask not detected. Please open this page in an external browser with MetaMask installed or use a wallet-compatible browser.";
                 console.error("MetaMask not detected. Likely Telegram in-app browser issue.");
                 fallback.style.display = "block";
+                // Telegram Web App: Prompt to open external browser
+                if (window.Telegram?.WebApp) {
+                    window.Telegram.WebApp.showAlert(
+                        "MetaMask is not available in Telegram. Please open this page in an external browser with MetaMask installed.",
+                        () => window.Telegram.WebApp.openLink(window.location.href)
+                    );
+                }
                 return;
             }
 
@@ -100,10 +113,27 @@
                 console.log("Connected account:", userAddress);
 
                 // Ensure Monad testnet
-                await window.ethereum.request({
-                    method: "wallet_switchEthereumChain",
-                    params: [{ chainId: "0x279f" }], // Monad testnet chain ID: 10111
-                });
+                try {
+                    await window.ethereum.request({
+                        method: "wallet_switchEthereumChain",
+                        params: [{ chainId: "0x279f" }], // Monad testnet chain ID: 10111
+                    });
+                } catch (switchError) {
+                    if (switchError.code === 4902) {
+                        await window.ethereum.request({
+                            method: "wallet_addEthereumChain",
+                            params: [{
+                                chainId: "0x279f",
+                                chainName: "Monad Testnet",
+                                rpcUrls: ["https://testnet-rpc.monad.xyz"],
+                                nativeCurrency: { name: "MON", symbol: "MON", decimals: 18 },
+                                blockExplorerUrls: []
+                            }]
+                        });
+                    } else {
+                        throw switchError;
+                    }
+                }
 
                 // Initialize Web3
                 const web3 = new Web3(window.ethereum);
@@ -115,8 +145,11 @@
                 console.log("Current allowance:", allowance / 10**18, "$TOURS");
 
                 if (parseInt(allowance) >= 1000000000000000000) {
-                    status.textContent = "Approval already granted. You can close this page and return to Telegram.";
+                    status.textContent = "Approval already granted. Return to Telegram and click 'Accept' again.";
                     console.log("Sufficient allowance detected.");
+                    if (window.Telegram?.WebApp) {
+                        window.Telegram.WebApp.close();
+                    }
                     return;
                 }
 
@@ -126,10 +159,19 @@
                 const tx = await toursContract.methods.approve(ESCROW_CONTRACT_ADDRESS, "1000000000000000000").send({ from: userAddress });
                 status.textContent = `Approval successful! Transaction hash: ${tx.transactionHash}. Return to Telegram and click 'Accept' again.`;
                 console.log("Approval transaction successful:", tx.transactionHash);
+                if (window.Telegram?.WebApp) {
+                    window.Telegram.WebApp.close();
+                }
             } catch (error) {
-                status.textContent = `Error: ${error.message}. Please try again or open in an external browser with MetaMask.`;
+                status.textContent = `Error: ${error.message}. Please try again in an external browser with MetaMask installed.`;
                 console.error("Approval error:", error);
                 document.getElementById("fallback").style.display = "block";
+                if (window.Telegram?.WebApp) {
+                    window.Telegram.WebApp.showAlert(
+                        `Approval failed: ${error.message}. Please open in an external browser.`,
+                        () => window.Telegram.WebApp.openLink(window.location.href)
+                    );
+                }
             }
         }
     </script>
