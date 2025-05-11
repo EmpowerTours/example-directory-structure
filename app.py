@@ -11,7 +11,7 @@ w3 = Web3(Web3.HTTPProvider('https://testnet-rpc.monad.xyz'))
 # Home Route
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('approval.html')
 
 # Balance Route
 @app.route('/balance/<address>')
