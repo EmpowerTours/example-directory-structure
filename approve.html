@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmpowerTours - Approve $TOURS</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.7.4/dist/web3.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+        #status { margin-top: 20px; color: red; }
+    </style>
+</head>
+<body>
+    <h1>EmpowerTours: Approve $TOURS for Game</h1>
+    <p>Connect your MetaMask wallet to approve the escrow contract for 1 $TOURS.</p>
+    <button onclick="approveTours()">Approve $TOURS</button>
+    <div id="status"></div>
+
+    <script>
+        const TOURS_CONTRACT_ADDRESS = "0x2Da15A8B55BE310A7AB8EB0010506AB30CD6CBcf";
+        const ESCROW_CONTRACT_ADDRESS = "0x1BC922D67Cbc0dAf9C06442a80cE32009Ff02DCF";
+        const TOURS_ABI = [
+            {
+                "constant": False,
+                "inputs": [
+                    {"name": "_spender", "type": "address"},
+                    {"name": "_value", "type": "uint256"}
+                ],
+                "name": "approve",
+                "outputs": [{"name": "", "type": "bool"}],
+                "type": "function"
+            },
+            {
+                "constant": True,
+                "inputs": [
+                    {"name": "_owner", "type": "address"},
+                    {"name": "_spender", "type": "address"}
+                ],
+                "name": "allowance",
+                "outputs": [{"name": "", "type": "uint256"}],
+                "type": "function"
+            }
+        ];
+
+        async function approveTours() {
+            const status = document.getElementById("status");
+            status.textContent = "Connecting to MetaMask...";
+
+            if (!window.ethereum) {
+                status.textContent = "MetaMask not detected. Please install MetaMask.";
+                return;
+            }
+
+            try {
+                // Request account access
+                const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+                const userAddress = accounts[0];
+
+                // Initialize Web3
+                const web3 = new Web3(window.ethereum);
+                const toursContract = new web3.eth.Contract(TOURS_ABI, TOURS_CONTRACT_ADDRESS);
+
+                // Check current allowance
+                const allowance = await toursContract.methods.allowance(userAddress, ESCROW_CONTRACT_ADDRESS).call();
+                if (parseInt(allowance) >= 1000000000000000000) {
+                    status.textContent = "Approval already granted. You can close this page.";
+                    return;
+                }
+
+                // Approve 1 $TOURS
+                status.textContent = "Please sign the transaction in MetaMask...";
+                const tx = await toursContract.methods.approve(ESCROW_CONTRACT_ADDRESS, "1000000000000000000").send({ from: userAddress });
+                status.textContent = `Approval successful! Transaction hash: ${tx.transactionHash}. You can close this page.`;
+            } catch (error) {
+                status.textContent = `Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
