@@ -6,16 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EmpowerTours</title>
     <!-- Load HTMX for dynamic content -->
-    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
-    <!-- Load web3.js as a module for wallet connection -->
-    <script src="/static/js/web3.js" type="module" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.3.0/web3.min.js" integrity="sha512-3KqHLZOzP4Vq8c1JqQ6jVRpfO8s3O7hL+HLrO4sYJDiN5OlsJDAHUgqF67xLqQ3zD63v/OkYQX4PQH8T8IioS3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+        #status { margin-top: 20px; color: red; }
+        a { color: blue; text-decoration: underline; }
+    </style>
 </head>
 <body>
-    <h1>Welcome to EmpowerTours</h1>
-
     <h1>EmpowerTours: Approve $TOURS for Game</h1>
     <p>Connect your MetaMask wallet to approve the escrow contract for 1 $TOURS.</p>
     <button id="approveButton" onclick="approveTours()" disabled>Approve $TOURS</button>
+    <p id="fallback" style="display: none;">
+        If the button is disabled, open this page in an external browser with MetaMask installed: 
+        <a id="currentUrl"></a>
+    </p>
     <div id="status"></div>
 
     <script>
@@ -44,26 +50,43 @@
             }
         ];
 
-        // Wait for Web3.js to load
-        window.onload = function() {
+        // Initialize page
+        function initialize() {
             const status = document.getElementById("status");
             const approveButton = document.getElementById("approveButton");
+            const fallback = document.getElementById("fallback");
+            const currentUrl = document.getElementById("currentUrl");
 
+            // Set current URL for fallback
+            currentUrl.textContent = window.location.href;
+            currentUrl.href = window.location.href;
+
+            console.log("Initializing approval page...");
+
+            // Check Web3.js
             if (typeof Web3 === "undefined") {
-                status.textContent = "Error: Web3.js failed to load. Please refresh the page or check your internet connection.";
+                status.textContent = "Error: Web3.js failed to load. Please refresh the page or open in an external browser.";
                 console.error("Web3.js is not defined. Check CDN or network issues.");
+                fallback.style.display = "block";
                 return;
             }
 
+            // Check MetaMask
             if (!window.ethereum) {
-                status.textContent = "MetaMask not detected. Please install MetaMask and connect to the Monad testnet.";
-                console.error("MetaMask not detected.");
+                status.textContent = "MetaMask not detected. Please install MetaMask and open this page in an external browser.";
+                console.error("MetaMask not detected. Likely Telegram in-app browser issue.");
+                fallback.style.display = "block";
                 return;
             }
 
+            // Enable button
             approveButton.disabled = false;
             status.textContent = "Ready to approve. Click the button to connect MetaMask.";
-        };
+            console.log("Web3.js and MetaMask detected. Button enabled.");
+        }
+
+        // Run initialization after scripts load
+        window.addEventListener("load", initialize);
 
         async function approveTours() {
             const status = document.getElementById("status");
@@ -104,8 +127,9 @@
                 status.textContent = `Approval successful! Transaction hash: ${tx.transactionHash}. Return to Telegram and click 'Accept' again.`;
                 console.log("Approval transaction successful:", tx.transactionHash);
             } catch (error) {
-                status.textContent = `Error: ${error.message}. Please try again or install MetaMask.`;
+                status.textContent = `Error: ${error.message}. Please try again or open in an external browser with MetaMask.`;
                 console.error("Approval error:", error);
+                document.getElementById("fallback").style.display = "block";
             }
         }
     </script>
